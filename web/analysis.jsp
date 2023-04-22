@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
     <title>Analysis</title>
 </head>
@@ -79,8 +81,74 @@
           
       </tbody>
       </table>
+<hr>
+
+<div style="width: 595px; height: 595px; margin:auto;">
+<u><h3 style="align-content:center; padding-left: 37%;"  >Quantity Selled</h3></u>
+<hr>
+  <canvas id="quantitySoldChart"></canvas>
+</div>
+
 <br>
 <br>
+<br>
+<hr>
+<br>
+<br>
+<script>
+// Get the data for the pie chart
+var quantitySoldData = [
+<%
+   try{
+        // Your existing code to fetch data from the database and generate the table rows
+        Class.forName("com.mysql.cj.jdbc.Driver");
+        String url="jdbc:mysql://localhost:3306/inventory_management";
+        String username="root";
+        String pass="123456";
+        Connection con;
+        con=DriverManager.getConnection(url,"root",pass);
+        String select_sales="SELECT * FROM sales";
+        Statement stmt=con.createStatement();
+        ResultSet rst=stmt.executeQuery(select_sales);
+        while(rst.next()){
+            // Your existing code to extract data from the result set and generate table rows
+
+            // Generate the data for the pie chart
+            String data = "{value: " + rst.getInt(4) + ", label: \"" + rst.getString(3) + "\"},";
+            out.println(data);
+        }
+   }
+   catch(Exception e){
+        out.print(e);
+    }     
+%>
+];
+
+// Create the pie chart
+var ctx = document.getElementById('quantitySoldChart').getContext('2d');
+var chart = new Chart(ctx, {
+    type: 'pie',
+    data: {
+        labels: quantitySoldData.map(item => item.label),
+        datasets: [{
+            data: quantitySoldData.map(item => item.value),
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.8)',
+                'rgba(54, 162, 235, 0.8)',
+                'rgba(255, 206, 86, 0.8)',
+                'rgba(75, 192, 192, 0.8)',
+                'rgba(153, 102, 255, 0.8)',
+                'rgba(255, 159, 64, 0.8)'
+            ],
+        }],
+    },
+    options: {
+        responsive: true
+    }
+});
+</script>
+
+
 
     <footer style=" width: 100%; position:fixed; bottom:0;" class="text-center text-white" style="background-color: #f1f1f1; margin-top: 25px"> 
         <div class="text-center text-dark p-3" style="background-color: rgba(0, 0, 0, 0.2);">
