@@ -25,7 +25,7 @@
                String drop_table="drop table bill";
                Statement stmt=con.createStatement();
                 stmt.execute(drop_table);
-                response.sendRedirect("home.html");
+                response.sendRedirect("home.php");
                 stmt.close();
                 con.close();
             }
